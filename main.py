@@ -216,7 +216,6 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
             passw = user_info['moodle_password']
             if getUser['uploadtype'] == 'calendar' or getUser['uploadtype'] == 'draft':
                 nuevo = []
-                msg = '🦾𝙼𝙾𝚅𝙸𝙴𝙽𝙳𝙾 𝙳𝚁𝙰𝙵𝚃 𝙰 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾😎')
                 #if len(files)>0:
                     #for f in files:
                         #url = urllib.parse.unquote(f['directurl'],encoding='utf-8', errors='replace')
@@ -243,7 +242,7 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
                 with open(fname, "w") as f:
                     f.write(str(loco))
                 #fname = str(randint(100000000, 9999999999)) + ".txt"
-                bot.editMessageText(message,'𝙴𝙽𝙻𝙰𝙲𝙴𝚂 𝙳𝙸𝚁𝙴𝙲𝚃𝙾𝚂 𝙳𝙴 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾👇')
+                bot.sendMessage(update.message.chat.id,'𝙴𝙽𝙻𝙰𝙲𝙴𝚂 𝙳𝙸𝚁𝙴𝙲𝚃𝙾𝚂 𝙳𝙴 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾👇')
                 bot.sendFile(update.message.chat.id,fname)
             else:
                 bot.sendMessage(update.message.chat.id,'💢𝙽𝙾 𝚂𝙴 𝙿𝚄𝙳𝙾 𝙼𝙾𝚅𝙴𝚁 𝙰 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾💢')
