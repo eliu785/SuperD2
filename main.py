@@ -201,7 +201,9 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
             txtname = str(file).split('/')[-1].split('.')[0] + '.txt'
             sendTxt(txtname,files,update,bot)
         try:
+
             import urllib
+
             user_info = jdb.get_user(update.message.sender.username)
             cloudtype = user_info['cloudtype']
             proxy = ProxyCloud.parse(user_info['proxy'])
@@ -242,12 +244,14 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
                 with open(fname, "w") as f:
                     f.write(str(loco))
                 #fname = str(randint(100000000, 9999999999)) + ".txt"
-                bot.sendMessage(update.message.chat.id,'𝙴𝙽𝙻𝙰𝙲𝙴𝚂 𝙳𝙸𝚁𝙴𝙲𝚃𝙾𝚂 𝙳𝙴 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾👇')
+                bot.sendMessage(message.chat.id,'𝙴𝙽𝙻𝙰𝙲𝙴𝚂 𝙳𝙸𝚁𝙴𝙲𝚃𝙾𝚂 𝙳𝙴 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾👇')
                 bot.sendFile(update.message.chat.id,fname)
             else:
-                bot.sendMessage(update.message.chat.id,'💢𝙽𝙾 𝚂𝙴 𝙿𝚄𝙳𝙾 𝙼𝙾𝚅𝙴𝚁 𝙰 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾💢')
+                return
+        except:
+            bot.sendMessage(message.chat.id,'💢𝙽𝙾 𝚂𝙴 𝙿𝚄𝙳𝙾 𝙼𝙾𝚅𝙴𝚁 𝙰 𝙲𝙰𝙻𝙴𝙽𝙳𝙰𝚁𝙸𝙾💢')
     else:
-        bot.sendMessage(update.message.chat.id,'⚠️𝙴𝚛𝚛𝚘𝚛 en la 𝚗𝚞𝚋𝚎⚠️')
+        bot.editMessageText(message,'⚠️𝙴𝚛𝚛𝚘𝚛 𝚎𝚗 𝚕𝚊 𝚗𝚞𝚋𝚎⚠️')
 
 def ddl(update,bot,message,url,file_name='',thread=None,jdb=None):
     downloader = Downloader()
