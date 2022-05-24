@@ -403,6 +403,67 @@ def onmessage(update,bot:ObigramClient):
             bot.sendMessage(update.message.chat.id,tuto.read())
             tuto.close()
             return
+        if '/xdlink' in msgText:
+
+            try: 
+                urls = str(msgText).split(' ')[1]
+                channelid = getUser['channelid']
+                xdlinkdd = xdlink.parse(urls, username)
+                msg = f'**Aquí está su link encriptado en xdlink:** `{xdlinkdd}`'
+                msgP = f'**Aquí está su link encriptado en xdlink protegido:** `{xdlinkdd}`'
+                if channelid == 0:
+                    bot.sendMessage(chat_id = chatid, parse_mode = 'Markdown', text = msg)
+                else: 
+                    bot.sendMessage(chat_id = chatid, parse_mode = 'Markdown', text = msgP)
+            except:
+                msg = f'》*El comando debe ir acompañado de un link moodle*'
+                bot.sendMessage(chat_id = chatid, parse_mode = 'Markdown', text = msg)
+            return
+
+        if '/xdon' in msgText:
+            getUser = user_info
+            if getUser:
+                getUser['xdlink'] = 1
+                jdb.save_data_user(username,getUser)
+                jdb.save()
+                statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                bot.sendMessage(update.message.chat.id,statInfo)
+            return
+            
+        if '/xdoff' in msgText:
+            getUser = user_info
+            if getUser:
+                getUser['xdlink'] = 0
+                jdb.save_data_user(username,getUser)
+                jdb.save()
+                statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                bot.sendMessage(update.message.chat.id,statInfo)
+            return
+
+        if '/channelid' in msgText:
+            channelId = str(msgText).split(' ')[1]
+            getUser = user_info
+            try:
+                if getUser:
+                    getUser['channelid'] = str(msgText).split(' ')[1]
+                    jdb.save_data_user(username,getUser)
+                    jdb.save()
+                    statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                    bot.sendMessage(update.message.chat.id,statInfo)
+            except:
+                msg = f'》*El comando debe ir acompañado de un id de canal*\n\n*Ejemplo: -100XXXXXXXXXX*'
+                bot.sendMessage(chat_id = chatid, parse_mode = 'Markdown', text = msg)
+            return
+
+        if '/delChannel' in msgText:
+            getUser = user_info
+            if getUser:
+                getUser['channelid'] = 0
+                jdb.save_data_user(username,getUser)
+                jdb.save()
+                statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                bot.sendMessage(update.message.chat.id,statInfo)
+            return
         if '/about' in msgText:
             message = bot.sendMessage(update.message.chat.id,'🤩')
             información = open('información.txt','r')
