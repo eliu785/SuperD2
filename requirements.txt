@@ -12,3 +12,4 @@ aiohttp
 yarl
 pyrogram
 Pysocks
+aiohttp_socks
