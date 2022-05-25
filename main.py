@@ -808,6 +808,23 @@ def onmessage(update,bot:ObigramClient):
             else:
                 bot.editMessageText(message,'🧐')
                 message = bot.sendMessage(update.message.chat.id,'⚠️Error y posibles causas:\n1-Revise su Cuenta\n2-Servidor Desabilitado: '+client.path)
+        elif '/delall' in msgText and user_info['cloudtype']=='moodle':
+            proxy = ProxyCloud.parse(user_info['proxy'])
+            client = MoodleClient(user_info['moodle_user'],
+                                   user_info['moodle_password'],
+                                   user_info['moodle_host'],
+                                   user_info['moodle_repo_id'],
+                                   proxy=proxy)
+            loged = client.login()
+            if loged:
+                evfiles = client.getEvidences()
+                for item in evfiles:
+                	client.deleteEvidence(item)
+                client.logout()
+                bot.editMessageText(message,'𝙰𝚁𝙲𝙷𝙸𝚅𝙾𝚂 𝙴𝙻𝙸𝙼𝙸𝙽𝙰𝙳𝙾𝚂🗑️')
+            else:
+                bot.editMessageText(message,'🧐')
+                message = bot.sendMessage(update.message.chat.id,'⚠️Error y posibles causas:\n1-Revise su Cuenta\n2-Servidor Desabilitado: '+client.path)
         elif 'http' in msgText:
             url = msgText
             ddl(update,bot,message,url,file_name='',thread=thread,jdb=jdb)
