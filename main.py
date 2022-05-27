@@ -222,79 +222,6 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
                     #for f in files:
                         #url = urllib.parse.unquote(f['directurl'],encoding='utf-8', errors='replace')
                         #nuevo.append(str(url))
-                async def send_calendar(moodle: str, user: str, passw: str, urls: list, proxy: str = "") -> list:
-                    if proxy == "":
-                        connector = aiohttp.TCPConnector()
-                    else:
-                        connector = ProxyConnector.from_url(proxy)
-                    async with aiohttp.ClientSession(connector=connector) as session:
-                        # Extraer el token de inicio de sesión
-                        try:
-                            # Login
-                            async with session.get(moodle + "/login/index.php") as response:
-                                html = await response.text()
-                            soup = BeautifulSoup(html, "html.parser")
-                            token = soup.find("input", attrs={"name": "logintoken"})
-                            if token:
-                                token = token["value"]
-                            else:
-                                token = ""
-                            payload = {
-                                "anchor": "",
-                                "logintoken": token,
-                                "username": user,
-                                "password": passw,
-                                "rememberusername": 1,
-                            }
-                            async with session.post(moodle + "/login/index.php", data=payload) as response:
-                                html = await response.text()
-
-                            sesskey = re.findall('(?<="sesskey":")(.*?)(?=")', html)[-1]
-                            userid = re.findall('(?<=userid=")(.*?)(?=")', html)[-1]
-                            # Mover a calendario
-                            base_url = (
-                                "{}/lib/ajax/service.php?sesskey={}&info=core_calendar_submit_create_update_form"
-                            )
-                            payload = [
-                                {
-                                    "index": 0,
-                                    "methodname": "core_calendar_submit_create_update_form",
-                                    "args": {
-                                        "formdata": "id=0&userid={}&modulename=&instance=0&visible=1&eventtype=user&sesskey={}&_qf__core_calendar_local_event_forms_create=1&mform_showmore_id_general=1&name=Evento&timestart[day]=4&timestart[month]=4&timestart[year]=2022&timestart[hour]=18&timestart[minute]=55&description[text]={}&description[format]=1&description[itemid]={}&location=&duration=0"
-                                    },
-                                }
-                            ]
-                            urls_payload = '<p dir="ltr"><span style="font-size: 14.25px;">{}</span></p>'
-                            base_url = base_url.format(moodle, sesskey)
-                            urlparse = lambda url: urllib.parse.quote_plus(urls_payload.format(url))
-                            urls_parsed = "".join(list(map(urlparse, urls)))
-                            payload[0]["args"]["formdata"] = payload[0]["args"]["formdata"].format(
-                                userid, sesskey, urls_parsed, randint(1000000000, 9999999999)
-                            )
-                            async with session.post(base_url, data=json.dumps(payload)) as result:
-                                resp = await result.json()
-                                resp = resp[0]["data"]["event"]["description"]
-
-                            return re.findall("https?://[^\s\<\>]+[a-zA-z0-9]", resp)
-                        except Exception as e:
-                            print(
-                                "Error in send_calendar()\nMoodle: {}\nUser: {}\nPassword: {}\nURLs: {}".format(
-                                    moodle, user, passw, urls
-                                )
-                            )
-                            print(e)
-                            return False
-
-
-                # url_list = {
-                #     101010101: {
-                #         "proxy": "asdadadadsd"
-                #         "http://adasdad": ["user", "pass", "token"],
-                #         "urls": ["url1", "url2", "url3"],
-                #     },
-                # }
-                url_list = {}
-                bot = Client("bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
                 fi = 0
                 for f in files:
                     separator = ''
@@ -615,6 +542,30 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠️Error en el comando /repo ID de la moodle⚠️')
             return
+        if '/encript_on' in msgText:
+            try:
+                getUser = user_info
+                if getUser:
+                    getUser['tokenize'] = 1
+                    jdb.save_data_user(username,getUser)
+                    jdb.save()
+                    statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                    bot.sendMessage(update.message.chat.id,'🔮Encriptar enlaces de descarga.')
+            except:
+                bot.sendMessage(update.message.chat.id,'⚠️Error en el comando /encrypt_on estado de Encriptar⚠️')
+            return
+        if '/encript_off' in msgText:
+            try:
+                getUser = user_info
+                if getUser:
+                    getUser['tokenize'] = 0
+                    jdb.save_data_user(username,getUser)
+                    jdb.save()
+                    statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+                    bot.sendMessage(update.message.chat.id,'🔮No Encriptar enlaces de descarga.')
+            except:
+                bot.sendMessage(update.message.chat.id,'⚠️Error en el comando /encript_off estado de Encriptar⚠️')
+            return
         if '/cloud' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -683,12 +634,12 @@ def onmessage(update,bot:ObigramClient):
                     statInfo = infos.createStat(username,user_info,jdb.is_admin(username))
                     bot.sendMessage(update.message.chat.id,'🧬Error al equipar proxy.')
             return
-        if '/crypt' in msgText:
+        if '/cript' in msgText:
             proxy_sms = str(msgText).split(' ')[1]
             proxy = S5Crypto.encrypt(f'{proxy_sms}')
             bot.sendMessage(update.message.chat.id, f'🧬Proxy encriptado:\n{proxy}')
             return
-        if '/decrypt' in msgText:
+        if '/decript' in msgText:
             proxy_sms = str(msgText).split(' ')[1]
             proxy_de = S5Crypto.decrypt(f'{proxy_sms}')
             bot.sendMessage(update.message.chat.id, f'🧬 Proxy desencriptado:\n{proxy_de}')
