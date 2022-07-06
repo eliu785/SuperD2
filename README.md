@@ -1,2 +1,2 @@
 ### Heroku
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Yosolo1/Yiolobotazo)
+![Deploy](https://heroku.com/deploy?template=https://github.com/eliu785/SuperD2)
